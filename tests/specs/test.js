@@ -1,3 +1,5 @@
+const { percyScreenshot } = require("@percy/selenium-webdriver");
+
 describe("Testing with BStackDemo", () => {
   it("add product to cart", async () => {
     await browser.url("https://bstackdemo.com/");
@@ -6,6 +8,7 @@ describe("Testing with BStackDemo", () => {
       5000,
       "Title didn't match with BrowserStack"
     );
+    await percyScreenshot(browser, "Homepage");
 
     const productOnScreen = await $('//*[@id="1"]/p');
     const productOnScreenText = await productOnScreen.getText();
@@ -13,10 +16,13 @@ describe("Testing with BStackDemo", () => {
     const addToCart = await $('//*[@id="1"]/div[4]');
     await addToCart.click();
 
-    const productInCart = await $('//*[@id="__next"]/div/div/div[2]/div[2]/div[2]/div/div[3]/p[1]');
+    const productInCart = await $(
+      '//*[@id="__next"]/div/div/div[2]/div[2]/div[2]/div/div[3]/p[1]'
+    );
+    await percyScreenshot(browser, "Cart");
 
-    await browser.waitUntil(async () => (
-      await productInCart.getText()).match(productOnScreenText), 
+    await browser.waitUntil(
+      async () => (await productInCart.getText()).match(productOnScreenText),
       { timeout: 5000 }
     );
   });
